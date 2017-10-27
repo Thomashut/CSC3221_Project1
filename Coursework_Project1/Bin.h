@@ -33,17 +33,17 @@ public:
 	   by the passed int. eg. getx(5) will get the x coord from the vector at index 5. If no vector is found
 	   a NULL will be returned.
 	*/
-	float getx(int num);
-	float gety(int num);
-	float getz(int num);
+	float const getx(int num);
+	float const gety(int num);
+	float const getz(int num);
 
 	// End of Getters
 
 	/* Returns the bin size, used for testing. */
-	int getSize();
+	int const getSize();
 
 	/* Returns the amount of Vectors currently in the bin*/
-	int getCurrentCapacity();
+	int const getCurrentCapacity();
 
 	/* 
 	   Given 3 float coords create a new Vector3D object and add it into the Bin. If no space
@@ -55,10 +55,25 @@ public:
 	bool remove(int num);
 
 	// Overload assignment opperator to ensure true copying and pointer handeling
-	Bin operator=(Bin b);
+	Bin operator=(const Bin* b);
 
 private:
 	Vector3D* vectors;
 	int size;
 	int currentCapacity;
+
+	// Set the size of the bin, only allowed on construction of the bin
+	void setSize(int size);
+
+	// Increases the current capacity by one, called when adding an object to the bin
+	void incrementCapacity();
+
+	// Decreases the current capacity by one, called when removing an object from the bin
+	void decrementCapacity();
+
+	// Used in constructors and assignments to completly override the current number of objects
+	void setCapacity(int cap);
+
+	// Passes a pointer to the bins vectors, only called internally
+	Vector3D* getVectors();
 };

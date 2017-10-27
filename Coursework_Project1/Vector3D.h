@@ -13,6 +13,7 @@
 
 class Vector3D {
 public:
+
 	Vector3D(const Vector3D* vector); // Copy Constructor
 	Vector3D(float x, float y, float z); // Normal Constructor
 	Vector3D(); // Default Constructor
@@ -35,6 +36,7 @@ public:
 	/* Multiplies the current Vector by a given scalar */
 	Vector3D operator*(float scalar);
 
+
 	/* Divides the current Vector by a given scalar*/
 	Vector3D operator/(float scalar);
 
@@ -42,7 +44,9 @@ public:
 	Vector3D operator%(Vector3D* rhs);
 
 	/* Overload for assignment operator ensures correct copying */
-	Vector3D operator=(Vector3D* rhs);
+	Vector3D& operator=(Vector3D* rhs);
+
+	bool operator==(Vector3D* rhs);
 
 	/* End of Operator Overloads*/
 
@@ -52,8 +56,14 @@ public:
 	/* Returns a vector orthogonal to two given vectors (vector product) */
 	Vector3D unitVectorOrthogonal(Vector3D* v1, Vector3D* v2);
 
+
+
 private:
-	float x;
-	float y;
-	float z;
+	float* x;
+	float* y;
+	float* z;
+
+	void setx(float x);
+	void sety(float y);
+	void setz(float z);
 };

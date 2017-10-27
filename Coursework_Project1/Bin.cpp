@@ -17,23 +17,33 @@ const int DEFAULT_BIN_SIZE = 10;
 // Copy Constructor
 Bin::Bin(const Bin* b)
 {
-	this->vectors = new Vector3D[b->getSize()];
-	for (int i = 0; i < b->getSize(); i++)
+	this->vectors = new Vector3D[b->getSize];
+
+	for (int i = 0; i < b->getSize; i++)
 	{
-		Vector3D* vect = this->vectors[i];
-		delete vect;
-		this->vectors[i] = new Vector3D(b->getx(i), b->gety(i), b->getz(i));
+		Vector3D* vect = &b->vectors[i];
+
+		if (vect == nullptr)
+		{
+			this->vectors[i] = nullptr;
+		}
+		else
+		{
+			this->vectors[i] = vect;
+		}
+
 	}
-	this->currentCapacity = b->currentCapacity;
+
+	this->setCapacity(b->getCurrentCapacity);
 }
 
 // Normal Constructor
 Bin::Bin(int b)
 {
 	if (b <= 0)
-		int placeholder = 0; // Thrown an exception when I figure out how to do it.
+		int dead = 59;
 	this->vectors = new Vector3D[b];
-	this->currentCapacity = 0;
+	this->setCapacity(0); // No objects in the bin
 }
 
 // Default Constructor
@@ -41,30 +51,33 @@ Bin::Bin()
 {
 	this->vectors = new Vector3D[DEFAULT_BIN_SIZE];
 	this->size = DEFAULT_BIN_SIZE;
-	this->currentCapacity = 0; // No items in the bin on creation;
+	this->setCapacity(0); // No objects in the bin
 }
 
-float Bin::getx(int num)
+float const Bin::getx(int num)
 {
-	return this->vectors[num]->getx();
+	Vector3D* vect = &this->vectors[num];
+	return vect->getx;
 }
 
-float Bin::gety(int num)
+float const Bin::gety(int num)
 {
-	return this->vectors[num]->gety();
+	Vector3D* vect = &this->vectors[num];
+	return vect->gety;
 }
 
-float Bin::getz(int num)
+float const Bin::getz(int num)
 {
-	return this->vectors[num]->getz();
+	Vector3D* vect = &this->vectors[num];
+	return vect->getz;
 }
 
-int Bin::getSize()
+int const Bin::getSize()
 {
 	return this->size;
 }
 
-int Bin::getCurrentCapacity()
+int const Bin::getCurrentCapacity()
 {
 	return this->currentCapacity;
 }
@@ -100,9 +113,64 @@ bool Bin::remove(int num)
 
 }
 
-// TO-DO
-Bin Bin::operator=(Bin b)
+Bin Bin::operator=(const Bin* b)
 {
-	return this;
+	if(b == nullptr)
+		// throw error
+
+	if (this->vectors)
+	{
+		delete[] this->vectors;
+	}
+
+	this->vectors = new Vector3D[b->getSize];
+
+	for (int i = 0; i < b->getSize; i++)
+	{
+		Vector3D* vect = &b->vectors[i];
+
+		if (vect == nullptr)
+		{
+			this->vectors[i] = nullptr;
+		}
+		else
+		{
+			this->vectors[i] = vect;
+		}
+
+	}
+
+	this->setCapacity(b->getCurrentCapacity);
 }
 
+void Bin::setSize(int size)
+{
+	if (size <= 0)
+		// throw error
+
+	if (this->getSize)
+		// throw error
+
+	this->size = size;
+}
+
+void Bin::incrementCapacity()
+{
+	if (this->getCurrentCapacity + 1 > this->getSize)
+		// throw error
+
+	this->currentCapacity++;
+}
+
+void Bin::decrementCapacity()
+{
+	if (this->getCurrentCapacity - 1 < 0)
+		// throw error
+
+	this->getCurrentCapacity--;
+}
+
+void Bin::setCapacity(int cap)
+{
+	this->currentCapacity = cap;
+}
