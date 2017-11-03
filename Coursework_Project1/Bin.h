@@ -1,20 +1,25 @@
-#pragma once
-#include "Vector3D.h";
-
 /*
-	Author: Thomas Hutchinson
-	Project: CSC3221 - Programming for Games - Project 1
-	File Name: Bin.h
-	Description:
-		The Bin acts as an object which stores a series of vectors.
-		It also allows the querying of specific vectors within it's storage.
-		Calls can be made to return the values of a vector, add a new vector
-		and remove a vector from the list. The max size of the bin is determined
-		at creation.
+Author: Thomas Hutchinson
+Project: CSC3221 - Programming for Games - Project 1
+File Name: Bin.h
+Description:
+The Bin acts as an object which stores a series of vectors.
+It also allows the querying of specific vectors within it's storage.
+Calls can be made to return the values of a vector, add a new vector
+and remove a vector from the list. The max size of the bin is determined
+at creation.
 */
+
+
+#include "Vector3D.h";
+#pragma once
+
 
 class Bin {
 public:
+	static const int DEFAULT_BIN_SIZE = 10;
+	static const int MAX_SAFE_SIZE = 1000; // Arbitary value for the max size of a bin
+
 	// Start of Constructors
 	Bin(const Bin* b); // Copy Constructor
 
@@ -33,17 +38,17 @@ public:
 	   by the passed int. eg. getx(5) will get the x coord from the vector at index 5. If no vector is found
 	   a NULL will be returned.
 	*/
-	float const getx(int num);
-	float const gety(int num);
-	float const getz(int num);
+	float const getx(int num) const;
+	float const gety(int num) const;
+	float const getz(int num) const;
 
 	// End of Getters
 
 	/* Returns the bin size, used for testing. */
-	int const getSize();
+	int const getSize() const;
 
 	/* Returns the amount of Vectors currently in the bin*/
-	int const getCurrentCapacity();
+	int const getCurrentCapacity() const;
 
 	/* 
 	   Given 3 float coords create a new Vector3D object and add it into the Bin. If no space
@@ -64,12 +69,6 @@ private:
 
 	// Set the size of the bin, only allowed on construction of the bin
 	void setSize(int size);
-
-	// Increases the current capacity by one, called when adding an object to the bin
-	void incrementCapacity();
-
-	// Decreases the current capacity by one, called when removing an object from the bin
-	void decrementCapacity();
 
 	// Used in constructors and assignments to completly override the current number of objects
 	void setCapacity(int cap);

@@ -13,20 +13,22 @@
 
 class Vector3D {
 public:
+	static const int DEFAULT_CORD = 1; // Used in default construction
 
 	Vector3D(const Vector3D* vector); // Copy Constructor
 	Vector3D(float x, float y, float z); // Normal Constructor
 	Vector3D(); // Default Constructor
+	~Vector3D(); // Deconstructor
 
 
 	/* Start of Getters */
-	float gety();
-	float getx();
-	float getz();
+	float gety() const;
+	float getx() const;
+	float getz() const;
 	/* End of Getters*/
 
 	/* Calculates the magnitude of the current vector and returns it */
-	float computeMagnitude();
+	float computeMagnitude() const;
 
 	/* Start of Operator Overloads*/
 	Vector3D operator+(Vector3D* rhs);
@@ -46,15 +48,16 @@ public:
 	/* Overload for assignment operator ensures correct copying */
 	Vector3D& operator=(Vector3D* rhs);
 
-	bool operator==(Vector3D* rhs);
+	/* Overload for the equals operator so that vectors may be compared for equality*/
+	bool operator==(Vector3D* rhs) const;
 
 	/* End of Operator Overloads*/
 
 	/* Produces a unit vector (of mag 1) pointing in the same direction of a given vector */
-	Vector3D unitVector(Vector3D* rhs);
+	Vector3D unitVector();
 
 	/* Returns a vector orthogonal to two given vectors (vector product) */
-	Vector3D unitVectorOrthogonal(Vector3D* v1, Vector3D* v2);
+	Vector3D unitVectorOrthogonal(Vector3D* rhs);
 
 
 
