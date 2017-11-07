@@ -38,17 +38,17 @@ public:
 	   by the passed int. eg. getx(5) will get the x coord from the vector at index 5. If no vector is found
 	   a NULL will be returned.
 	*/
-	float const getx(int num) const;
-	float const gety(int num) const;
-	float const getz(int num) const;
+	float getx(int num) const;
+	float gety(int num) const;
+	float getz(int num) const;
 
 	// End of Getters
 
 	/* Returns the bin size, used for testing. */
-	int const getSize() const;
+	int getSize() const;
 
 	/* Returns the amount of Vectors currently in the bin*/
-	int const getCurrentCapacity() const;
+	int getCurrentCapacity() const;
 
 	/* 
 	   Given 3 float coords create a new Vector3D object and add it into the Bin. If no space

@@ -43,27 +43,24 @@ Vector3D::Vector3D()
 // Deconstructor for vector to clean up all memory usage
 Vector3D::~Vector3D()
 {
-	delete this->x;
-	delete this->y;
-	delete this->z;
 }
 
 // Returns the x value of the current vector
 float Vector3D::getx() const
 {
-	return *x;
+	return x;
 }
 
 // Returns the y value of the current vector
 float Vector3D::gety() const
 {
-	return *y;
+	return y;
 }
 
 // Returns the z value of the current vector
 float Vector3D::getz() const
 {
-	return *z;
+	return z;
 }
 
 // Computes the magnitude of the current vector and returns it as a float
@@ -74,21 +71,21 @@ float Vector3D::computeMagnitude() const
 }
 
 // Calculate the sum of the current vector and a given vector -- Overloads the + opeartor
-Vector3D Vector3D::operator+(Vector3D* rhs)
+Vector3D Vector3D::operator+(Vector3D& rhs)
 {
-	this->setx(this->getx() + rhs->getx());
-	this->sety(this->gety() + rhs->gety());
-	this->setz(this->getz() + rhs->getz());
+	this->setx(this->getx() + rhs.getx());
+	this->sety(this->gety() + rhs.gety());
+	this->setz(this->getz() + rhs.getz());
 
 	return *this;
 }
 
 // Subtract the current vector from a given vector -- Overloads the - operator
-Vector3D Vector3D::operator-(Vector3D* rhs)
+Vector3D Vector3D::operator-(Vector3D& rhs)
 {
-	this->setx(this->getx() - rhs->getx());
-	this->sety(this->gety() - rhs->gety());
-	this->setz(this->getz() - rhs->getz());
+	this->setx(this->getx() - rhs.getx());
+	this->sety(this->gety() - rhs.gety());
+	this->setz(this->getz() - rhs.getz());
 
 	return *this;
 }
@@ -109,22 +106,21 @@ Vector3D Vector3D::operator/(float scalar)
 	if (scalar == 0 || this->getx() == 0 || this->gety() == 0 || this->getz() == 0)
 		throw "Divide by zero error!";
 
-	this->setx(this->getx() / scalar);
-	this->sety(this->gety() / scalar);
-	this->setz(this->getz() / scalar);
+	this->setx((this->getx() / scalar));
+	this->sety((this->gety() / scalar));
+	this->setz((this->getz() / scalar));
+
 	return *this;
 }
 
 // Cross Product of Two Vectors (this and the given vector rhs)
-Vector3D Vector3D::operator%(Vector3D* rhs)
+Vector3D Vector3D::operator%(Vector3D& rhs)
 {
 	/*
 				Vector3D(y1 * z2 - z1 * y2,
 			x1 * z2 - z1 * x2,
 			x1 * y2 - y2 * x1)
 	*/
-	if (rhs == nullptr)
-		throw "NOT A REAL VECTOR!";
 
 	// Floats used to store the intermediate values of the vector calculation
 	float x = DEFAULT_CORD;
@@ -132,9 +128,9 @@ Vector3D Vector3D::operator%(Vector3D* rhs)
 	float z = DEFAULT_CORD;
 
 	// Calculate the cross product
-	x = (gety() * rhs->getz()) - (this->getz() * rhs->gety());
-	y = (this->getz() * rhs->getx()) - (this->getx() * rhs->getz());
-	z = (this->getx() * rhs->gety()) - (this->gety() * rhs->getx());
+	x = (gety() * rhs.getz()) - (this->getz() * rhs.gety());
+	y = (this->getz() * rhs.getx()) - (this->getx() * rhs.getz());
+	z = (this->getx() * rhs.gety()) - (this->gety() * rhs.getx());
 
 	// Assign the temp variables to the this
 	this->setx(x);
@@ -146,28 +142,25 @@ Vector3D Vector3D::operator%(Vector3D* rhs)
 }
 
 // Assignment operator overload, will properly copy another vector making sure to clean memory as it goes
-Vector3D& Vector3D::operator=(Vector3D* rhs)
-{
-	if (rhs == nullptr)
-		throw ("Not a real Vector!");
-		
-	if (this == rhs);
+Vector3D& Vector3D::operator=(Vector3D& rhs)
+{		
+	if (*this == rhs)
 		return *this; // If objecs are equal just return the current object
 
 	// Setter method handles memory managment deleting and setting
-	this->setx(rhs->getx());
-	this->sety(rhs->gety());
-	this->setz(rhs->getz());
+	this->setx(rhs.getx());
+	this->sety(rhs.gety());
+	this->setz(rhs.getz());
 
 	return *this;
 }
 
 // Overload the equals method to ensure correct sense of equals
-bool Vector3D::operator==(Vector3D* rhs) const
+bool Vector3D::operator==(Vector3D& rhs) const
 {
-	return (this->getx() == rhs->getx() &&
-		this->gety() == rhs->gety() &&
-		this->getz() == rhs->getz());
+	return (this->getx() == rhs.getx() &&
+		this->gety() == rhs.gety() &&
+		this->getz() == rhs.getz());
 }
 
 // Calculates the unit vector of the current vector. Returns a new unit vector **user must delete this themselves!
@@ -193,10 +186,10 @@ Vector3D Vector3D::unitVector()
 
 	This will then become equal to the unit vector orthogonal
 */
-Vector3D Vector3D::unitVectorOrthogonal(Vector3D* rhs)
+Vector3D Vector3D::unitVectorOrthogonal(Vector3D& rhs)
 {
 	// Calcuate the cross product of the current vector and the right hand side
-	*this % rhs;
+	*this = *this % rhs;
 
 	// Divide the cross product vector by the calculated magnitude of the cross product vector
 	*this / this->computeMagnitude();
@@ -213,35 +206,15 @@ Vector3D Vector3D::unitVectorOrthogonal(Vector3D* rhs)
 */
 void Vector3D::setx(float x)
 {
-	if (this->x)
-	{
-		//delete this->x;
-		this->x = new float(x);
-	}
-	else
-	{
-		this->x = new float(x);
-	}
+	this->x = x;
 }
 
 void Vector3D::sety(float y)
 {
-	if (this->y == nullptr)
-		this->y = new float(y);
-	else
-	{
-		//delete this->y;
-		this->y = new float(y);
-	}
+	this->y = y;
 }
 
 void Vector3D::setz(float z)
 {
-	if (this->z == nullptr)
-		this->z = new float(z);
-	else
-	{
-		//delete this->z;
-		this->z = new float(z);
-	}
+	this->z = z;
 }

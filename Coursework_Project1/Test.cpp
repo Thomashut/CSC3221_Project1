@@ -30,34 +30,34 @@ int main() {
 	z = vect1->getz();
 	cout << "Vect1 x: " << x << " Vect1 y: " << y << " Vect1 z: " << z << endl;
 
-	Vector3D result = new Vector3D();
+	Vector3D* result = new Vector3D();
 	// Addition
 	
-	result = vect1 + vect2;
+	*result = *vect1 + *vect2;
 
 	cout << "Vect1 + Vect2 = xyz(" << vect1->getx() << ", " << vect1->gety() << ", " << vect1->getz() << ")" << endl;
 
 	// Subtraction
 
-	result = vect1 - vect2;
+	*result = *vect1 - *vect2;
 
 	cout << "Vect1 - Vect2 = xyz(" << vect1->getx() << ", " << vect1->gety() << ", " << vect1->getz() << ")" << endl;
 
 	// Dot Operator
 
-	result = vect1 * vect2;
+	*result = *vect1 * 10;
 
 	cout << "Vect1 * Vect2 = xyz(" << vect1->getx() << ", " << vect1->gety() << ", " << vect1->getz() << ")" << endl;
 
 	// Division
 
-	result = vect1 / vect2;
+	*result = *vect1 / 5;
 
 	cout << "Vect1 / Vect2 = xyz(" << vect1->getx() << ", " << vect1->gety() << ", " << vect1->getz() << ")" << endl;
 
 	// Cross Product
 
-	result = vect1 % vect2;
+	*result = *vect1 % *vect2;
 
 	cout << "Vect1 X Vect2 = xyz(" << vect1->getx() << ", " << vect1->gety() << ", " << vect1->getz() << ")" << endl;
 
@@ -65,20 +65,20 @@ int main() {
 
 	int res = vect1->computeMagnitude();
 
-	cout << "The magnitude of vect1 is: " << res;
+	cout << "The magnitude of vect1 is: " << res << endl;
 
 	// Unit Vector
 
-	result = vect1->unitVector();
+	*result = vect1->unitVector();
 
-	cout << "The unit vector of vect1 is: " << result.getx() << ", " << result.gety() << ", " << result.getz() << endl;
+	cout << "The unit vector of vect1 is: " << result->getx() << ", " << result->gety() << ", " << result->getz() << endl;
 
 	// Orthongonal Testing
 
-	result = vect1->unitVectorOrthogonal(vect2);
+	*result = vect1->unitVectorOrthogonal(*vect2);
 
 	cout << "The unit vector orthogonal of vect1 and vect2 is: "
-		<< result.getx() << ", " << result.gety() << ", " << result.getz() << endl;
+		<< result->getx() << ", " << result->gety() << ", " << result->getz() << endl;
 
 	// Copy Constructor Test
 
@@ -89,49 +89,47 @@ int main() {
 
 	delete vect1;
 	delete vect2;
-	delete &result;
+	delete result;
 
 	/* -- End of Vector Testing --*/
 
 	/* -- Start of Bin Testing --*/
 
-	Bin b1 = new Bin();
-	Bin b2 = new Bin(10);
+	Bin* b1 = new Bin();
+	Bin* b2 = new Bin(10);
 
 	// Getter Methods Testing (size and capacity)
 
-	cout << "Bin1 Starting capactity : " << b1.getCurrentCapacity() << endl;
-	cout << "Bin1 Starting Size (Should be default size) : " << b1.getSize() << endl;
+	cout << "Bin1 Starting capactity : " << b1->getCurrentCapacity() << endl;
+	cout << "Bin1 Starting Size (Should be default size) : " << b1->getSize() << endl;
 
 	// Add Method Testing
 
-	b1.add(5, 3, 1);
-
-	cout << "New Vector x: " << b1.getx(0) << " y : " << b1.gety(0) << " z : " << b1.getz << endl;
+	b1->add(5, 3, 1);
+	cout << "New Vector x: " << b1->getx(1) << " y : " << b1->gety(1) << " z : " << b1->getz(1) << endl;
 
 	// Bin Resizing Testing
 
 	for (int i = 0; i <= 30; i++)
 	{
-		b1.add(5, 4, 3);
+		b1->add(5, 4, 3);
 	}
 
-	cout << "New Bin Size after resizing: " << b1.getSize() << " New Bin Capacity: " << b1.getCurrentCapacity();
+	cout << "New Bin Size after resizing: " << b1->getSize() << " New Bin Capacity: " << b1->getCurrentCapacity() << endl;
 
 	// Bin Remove Testing
 
-	b1.remove(5); // Test of removing an element from in the middle of the array.
+	b1->remove(5); // Test of removing an element from in the middle of the array.
 
-	cout << "New Bin Capacity after remove: " << b1.getCurrentCapacity();
+	cout << "New Bin Capacity after remove: " << b1->getCurrentCapacity() << endl;
 
-	b1.add(50, 30, 50);
-	b1.remove(b1.getCurrentCapacity);
+	b1->add(50, 30, 50);
+	b1->remove(b1->getCurrentCapacity());
 
-	cout << "Vector has been removed: " << b1.getx(b1.getCurrentCapacity + 1);
+	cout << "Vector has been removed: ";
 
-	// Copy Constructor Test
-
-	// Assignment Operator Test
+	delete b1;
+	delete b2;
 
 	_sleep(5000000000);
 }

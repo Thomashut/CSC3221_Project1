@@ -11,10 +11,8 @@ at creation.
 */
 
 #include "Bin.h";
-
-
-
-
+#include <iostream>;
+using namespace std;
 
 // Copy Constructor
 Bin::Bin(const Bin* b)
@@ -27,16 +25,17 @@ Bin::Bin(const Bin* b)
 
 		if (vect == nullptr)
 		{
-			this->vectors[i] = nullptr;
+			this->vectors[i] = *(new Vector3D());
 		}
 		else
 		{
-			this->vectors[i] = vect;
+			this->vectors[i] = *vect;
 		}
 
 	}
 
 	this->setCapacity(b->getCurrentCapacity());
+	this->setSize(b->getSize());
 }
 
 // Normal Constructor
@@ -46,6 +45,7 @@ Bin::Bin(int b)
 		b = DEFAULT_BIN_SIZE; // If user has passed an invalid number set it to the default instead
 	this->vectors = new Vector3D[b];
 	this->setCapacity(0); // No objects in the bin
+	this->setSize(b);
 }
 
 // Default Constructor
@@ -59,55 +59,49 @@ Bin::Bin()
 // Clean up bin properly by deleting all of it's stored vectors before destroying the vector array itself
 Bin::~Bin()
 {
-	// Run through vectors and delete all of the dynamically allocated vectors
-	for (int i = 0; i < this->getSize(); i++)
-	{
-		delete &this->vectors[i];
-	}
-
 	// Delete vector array itself
 	delete[] this->vectors;
 }
 
 // Gets the x value of a vector within the bin index at position num
-float const Bin::getx(int num) const
+float Bin::getx(int num) const
 {
-	// If user attempts to query a vector that doesn't exist return a 0
-	if (num > this->getCurrentCapacity())
-		return 0;
+	if (num == 0 || num > this->getSize() - 1)
+		throw "Invalid Index";
+	int index = this->getSize() - num; // Calculate the index of the requests element
+	Vector3D* vect = &this->vectors[index];
 
-	Vector3D* vect = &this->vectors[num];
 	return vect->getx();
 }
 
 // Gets the y value of a vector within the bin index at position num
-float const Bin::gety(int num) const
+float Bin::gety(int num) const
 {
-	// If user attempts to query a vector that doesn't exist return a 0
-	if (num > this->getCurrentCapacity())
-		return 0;
+	if (num == 0 || num > this->getSize() - 1)
+		throw "Invalid Index";
+	int index = this->getSize() - num; // Calculate the index of the requests element
+	Vector3D* vect = &this->vectors[index];
 
-	Vector3D* vect = &this->vectors[num];
 	return vect->gety();
 }
 
 // Gets the z value of a vector within the bin index at position num
-float const Bin::getz(int num) const
+float Bin::getz(int num) const
 {
-	// If user attempts to query a vector that doesn't exist return a 0
-	if (num > this->getCurrentCapacity())
-		return 0;
+	if (num == 0 || num > this->getSize() - 1)
+		throw "Invalid Index";
+	int index = this->getSize() - num; // Calculate the index of the requests element
+	Vector3D* vect = &this->vectors[index];
 
-	Vector3D* vect = &this->vectors[num];
 	return vect->getz();
 }
 
-int const Bin::getSize() const
+int Bin::getSize() const
 {
 	return this->size;
 }
 
-int const Bin::getCurrentCapacity() const
+int Bin::getCurrentCapacity() const
 {
 	return this->currentCapacity;
 }
@@ -115,11 +109,11 @@ int const Bin::getCurrentCapacity() const
 // Adds vector to the bin IFF there is enough room, else it increases the bin size and adds it then
 Vector3D* Bin::add(float x, float y, float z)
 {
-	if (this->getCurrentCapacity() + 1 < (this->getSize() - 1))
+	if (this->getCurrentCapacity() + 1 < (this->getSize()))
 	{
 		Vector3D* vect = new Vector3D(x, y, z);
-		this->vectors[this->getCurrentCapacity()] = vect;
-		this->setCapacity(this->getCurrentCapacity() + 1); // Increase the capacity
+		this->vectors[((this->getSize() - this->getCurrentCapacity())) - 1] = *vect;
+		this->setCapacity(this->getCurrentCapacity() + 1);
 		return vect;
 	}
 	else // If bin is full it must be resized
@@ -140,26 +134,22 @@ Vector3D* Bin::add(float x, float y, float z)
 			as the bin is being resized more often.
 		*/
 		Vector3D* newBin = new Vector3D[this->getSize() * 2];
+		int oldSize = this->getSize(); // Used in the copy loop
+		this->setSize(this->getSize() * 2);
 
 		// Copy contents of old bin into the new ,larger, bin
-		for (int i = 0; i < this->getCurrentCapacity(); i++)
+		for (int i = this->getSize() - 1; i < 0; i--)
 		{
-			newBin[i] = this->vectors[i];
+			newBin[i] = this->vectors[i - oldSize];
 		}
 
-		// Delete the old bin
-		delete[] this->vectors;
-
-		// Keep the new bin
 		this->vectors = newBin;
 
 		// Add the new given vector into the bin
 		this->setCapacity(this->getCurrentCapacity() + 1);
 		Vector3D* vect = new Vector3D(x, y, z);
-		this->vectors[this->getCurrentCapacity()] = vect;
+		this->vectors[this->getSize() - this->getCurrentCapacity()] = *vect;
 
-		// Finally update the size member to reflect the new size of the bin
-		this->setSize(this->getSize() * 2);
 
 		return vect;
 	}
@@ -168,18 +158,21 @@ Vector3D* Bin::add(float x, float y, float z)
 // Removes an item from the bin and if the remove fails it returns a false
 bool Bin::remove(int num)
 {
-	if ((num >= 0) && (num < this->getCurrentCapacity()))
-	{
-		Vector3D* vect = &this->vectors[num];
-		delete vect;
-		*vect = nullptr;
-		this->setCapacity(this->getCurrentCapacity() - 1);
-		return true;
-	}
-	else
-	{
+	// If user attempts to remove a vector that does not exist return false for failure
+	if (num > this->getCurrentCapacity())
 		return false;
+
+	Vector3D vect = this->vectors[(this->getSize() - num) - 1];
+	vect = *(new Vector3D());
+
+	for (int i = ((this->getSize() - num) - 1); i > 0; i--)
+	{
+		this->vectors[i] = this->vectors[i - 1];
 	}
+
+	this->setCapacity(this->getCurrentCapacity() - 1);
+
+	return true;
 
 }
 
@@ -203,17 +196,17 @@ Bin Bin::operator=(const Bin* b)
 
 	this->vectors = new Vector3D[b->getSize()];
 
-	for (int i = 0; i < b->getSize(); i++)
+	for (int i = 0; i < b->getSize() - 1; i++)
 	{
 		Vector3D* vect = &b->vectors[i];
 
 		if (vect == nullptr)
 		{
-			this->vectors[i] = nullptr;
+			this->vectors[i] = *(new Vector3D());
 		}
 		else
 		{
-			this->vectors[i] = vect;
+			this->vectors[i] = *vect;
 		}
 
 	}

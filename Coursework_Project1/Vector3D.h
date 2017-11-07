@@ -31,9 +31,9 @@ public:
 	float computeMagnitude() const;
 
 	/* Start of Operator Overloads*/
-	Vector3D operator+(Vector3D* rhs);
+	Vector3D operator+(Vector3D& rhs);
 
-	Vector3D operator-(Vector3D* rhs);
+	Vector3D operator-(Vector3D& rhs);
 
 	/* Multiplies the current Vector by a given scalar */
 	Vector3D operator*(float scalar);
@@ -43,13 +43,13 @@ public:
 	Vector3D operator/(float scalar);
 
 	/* Calculates the Vector product of two Vectors*/
-	Vector3D operator%(Vector3D* rhs);
+	Vector3D operator%(Vector3D& rhs);
 
 	/* Overload for assignment operator ensures correct copying */
-	Vector3D& operator=(Vector3D* rhs);
+	Vector3D& operator=(Vector3D& rhs);
 
 	/* Overload for the equals operator so that vectors may be compared for equality*/
-	bool operator==(Vector3D* rhs) const;
+	bool operator==(Vector3D& rhs) const;
 
 	/* End of Operator Overloads*/
 
@@ -57,14 +57,14 @@ public:
 	Vector3D unitVector();
 
 	/* Returns a vector orthogonal to two given vectors (vector product) */
-	Vector3D unitVectorOrthogonal(Vector3D* rhs);
+	Vector3D unitVectorOrthogonal(Vector3D& rhs);
 
 
 
 private:
-	float* x;
-	float* y;
-	float* z;
+	float x;
+	float y;
+	float z;
 
 	void setx(float x);
 	void sety(float y);
